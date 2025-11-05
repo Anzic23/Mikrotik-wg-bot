@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+*.log
+docker-compose.override.yml
+data/
+*.key
+*token*
+*secret*
+*.pem
+.DS_Store
+Thumbs.db

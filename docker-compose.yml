@@ -1,0 +1,39 @@
+services:
+  wg-transformer:
+    build: .
+    image: wg-transformer:latest
+    container_name: wg-transformer
+    restart: unless-stopped
+    ports:
+      - "8647:8080"
+
+  wg-telegram-bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    image: wg-telegram-bot:latest
+    container_name: wg-telegram-bot
+    restart: unless-stopped
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      ALLOWED_USER_ID: ${ALLOWED_USER_ID}
+      TRANSFORM_URL: "http://wg-transformer:8080/transform"
+      RULES_PATH: "/data/rules.json"
+      OVERRIDES_PATH: "/data/overrides.conf"
+      # MikroTik REST:
+      MT_HOST: ${MT_HOST}
+      MT_PORT: ${MT_PORT}
+      MT_USER: ${MT_USER}
+      MT_PASSWORD: ${MT_PASSWORD}
+      MT_VERIFY_SSL: ${MT_VERIFY_SSL}
+      WG_INTERFACE: ${WG_INTERFACE}
+      WG_POOL: ${WG_POOL}
+      WG_POOL: ${WG_POOL}
+      WG_DNS: ${WG_DNS}
+      WG_ENDPOINT: ${WG_ENDPOINT}
+      WG_KEEPALIVE: ${WG_KEEPALIVE}
+      WG_MTU: ${WG_MTU}
+    volumes:
+      - ./data:/data:rw
+    depends_on:
+      - wg-transformer
